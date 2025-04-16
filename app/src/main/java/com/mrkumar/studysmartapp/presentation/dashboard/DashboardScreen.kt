@@ -37,6 +37,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.mrkumar.studysmartapp.R
 import com.mrkumar.studysmartapp.domain.model.Session
 import com.mrkumar.studysmartapp.domain.model.Subject
@@ -47,12 +49,51 @@ import com.mrkumar.studysmartapp.presentation.components.DeleteDialog
 import com.mrkumar.studysmartapp.presentation.components.SubjectCard
 import com.mrkumar.studysmartapp.presentation.components.studySessionList
 import com.mrkumar.studysmartapp.presentation.components.taskList
+import com.mrkumar.studysmartapp.presentation.destinations.SessionScreenRouteDestination
+import com.mrkumar.studysmartapp.presentation.destinations.SubjectScreenRouteDestination
+import com.mrkumar.studysmartapp.presentation.destinations.TaskScreenRouteDestination
+import com.mrkumar.studysmartapp.presentation.subject.SubjectScreenNavArgs
+import com.mrkumar.studysmartapp.presentation.task.TaskScreenNavArgs
 import com.mrkumar.studysmartapp.sessionList
 import com.mrkumar.studysmartapp.subjectList
 import com.mrkumar.studysmartapp.tasks
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+
+
+@Destination(start = true)
+@Composable
+fun DashBoardRoute(navigator: DestinationsNavigator) {
+
+    val viewModel: DashboardViewModel= hiltViewModel()
+
+    val state by viewModel.state.collectAsStateWithLifecycle()
+
+    DashBoardScreen(
+        onSubjectCardClick = {subjectId->
+            subjectId?.let {
+                val navArg= SubjectScreenNavArgs(subjectId=subjectId)
+                navigator.navigate(SubjectScreenRouteDestination(navArgs = navArg))
+            }
+        },
+        onTaskCardClick = {taskId ->
+            val navArg= TaskScreenNavArgs(taskId=taskId,subjectId = null)
+            navigator.navigate(TaskScreenRouteDestination(navArgs = navArg))
+        },
+        onStartSessionButtonClick = {navigator.navigate(SessionScreenRouteDestination)},
+        state = state
+    )
+}
+
 
 @Composable
-fun DashBoardScreen() {
+private fun DashBoardScreen(
+    state: DashboardState,
+    onSubjectCardClick:(Int?)-> Unit,
+    onTaskCardClick:(Int?)-> Unit,
+    onStartSessionButtonClick:()-> Unit
+) {
+
 
 
     var isAddSubjectDialogOpen by rememberSaveable {
@@ -62,19 +103,17 @@ fun DashBoardScreen() {
         mutableStateOf(false)
     }
 
-    var subjectName by remember { mutableStateOf("") }
-    var goalHours by remember { mutableStateOf("") }
-    var selectedColors by remember { mutableStateOf(Subject.subjectCardColors.random()) }
+
     AddSubjectDialog(
         isOpen = isAddSubjectDialogOpen,
         onDismissRequest = { isAddSubjectDialogOpen = false },
         onConfirmButtonClick = { isAddSubjectDialogOpen = false },
-        selectedColors = selectedColors,
-        onColorChange = { selectedColors=it },
-        subjectName = subjectName,
-        goalHours = goalHours,
-        onSubjectNameChange = { subjectName=it },
-        onGoalHoursChange = { goalHours=it },
+        selectedColors = state.subjectCardColors,
+        onColorChange = { },
+        subjectName = state.subjectName,
+        goalHours = state.goalStudyHours,
+        onSubjectNameChange = {  },
+        onGoalHoursChange = {  },
     )
 
     DeleteDialog(
@@ -98,24 +137,25 @@ fun DashBoardScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    subjectCount = 5,
-                    studiedHours = "10",
-                    goalHours = "15"
+                    subjectCount = state.totalSubjectCount,
+                    studiedHours = state.totalStudiedHours.toString(),
+                    goalHours = state.totalGoalStudyHours.toString()
                 )
             }
 
             item {
                 SubjectCardSection(
                     modifier = Modifier.fillMaxWidth(),
-                    subjectList = subjectList,
-                    onAddIconClicked = {isAddSubjectDialogOpen = true}
+                    subjectList = state.subjects,
+                    onAddIconClicked = {isAddSubjectDialogOpen = true},
+                    onSubjectCardClick = onSubjectCardClick
 
                     )
             }
 
             item {
                 Button(
-                    onClick = {},
+                    onClick = onStartSessionButtonClick,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 48.dp, vertical = 20.dp)
@@ -129,7 +169,7 @@ fun DashBoardScreen() {
                 emptyListText = "You don't have any upcoming tasks.\n " + "Click the + button in subject screen to add new task.",
                 tasks = tasks,
                 onCheckBoxClick = {},
-                onTaskCardClicked = {}
+                onTaskCardClicked = onTaskCardClick
             )
 
             item {
@@ -198,7 +238,8 @@ private fun SubjectCardSection(
     modifier: Modifier,
     subjectList: List<Subject>,
     emptyListText: String = "You don't have any subjects.\n  Click the + button to add new subject.",
-    onAddIconClicked:()-> Unit
+    onAddIconClicked:()-> Unit,
+    onSubjectCardClick:(Int?)-> Unit
 ) {
     Column(modifier = modifier) {
         Row(
@@ -247,11 +288,9 @@ private fun SubjectCardSection(
             items(subjectList) { subject ->
                 SubjectCard(
                     subjectName = subject.name,
-                    gradientColor = subject.colors
-                ) {
-
-
-                }
+                    gradientColor = subject.colors.map { Color(it) },
+                    onClick = {onSubjectCardClick(subject.subjectId)}
+                )
             }
 
         }

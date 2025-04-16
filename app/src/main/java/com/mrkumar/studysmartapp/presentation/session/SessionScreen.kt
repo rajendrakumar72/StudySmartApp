@@ -35,16 +35,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrkumar.studysmartapp.presentation.components.DeleteDialog
 import com.mrkumar.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.mrkumar.studysmartapp.presentation.components.studySessionList
 import com.mrkumar.studysmartapp.sessionList
 import com.mrkumar.studysmartapp.subjectList
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
+
+@Destination
+@Composable
+fun SessionScreenRoute(navigator: DestinationsNavigator) {
+
+    val viewModel: SessionViewModel= hiltViewModel()
+    SessionScreen(
+        onBackButtonClick = {
+            navigator.navigateUp()
+        }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionScreen() {
+private fun SessionScreen(onBackButtonClick: () -> Unit) {
 
     val scope = rememberCoroutineScope()
     val sheetState= rememberModalBottomSheetState()
@@ -74,7 +89,7 @@ fun SessionScreen() {
                 "This action can not be undone."
     )
     Scaffold(topBar = {
-        SessionScreenTopBar(onBackButtonClick = {})
+        SessionScreenTopBar(onBackButtonClick = onBackButtonClick)
     }) {innerPadding->
 
         LazyColumn(modifier = Modifier

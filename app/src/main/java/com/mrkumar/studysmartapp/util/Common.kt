@@ -27,3 +27,9 @@ fun Long?.changeMillsToDateString(): String{
     }?: LocalDate.now()
 return date.format(DateTimeFormatter.ofPattern("dd MM yyyy"))
 }
+
+fun Long.toHours():Float{
+    val hours=this.toFloat()/3600f
+    return "%.2f".format(hours).toFloat()
+
+}

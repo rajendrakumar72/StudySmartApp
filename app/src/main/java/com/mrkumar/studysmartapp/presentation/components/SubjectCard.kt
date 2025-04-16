@@ -24,7 +24,7 @@ fun SubjectCard(modifier: Modifier= Modifier,
                 gradientColor:List<Color>,
                 onClick:()-> Unit) {
 
-    Box(modifier = modifier.size(150.dp).clickable{onClick}
+    Box(modifier = modifier.size(150.dp).clickable{onClick()}
         .background(brush = Brush.verticalGradient(gradientColor), shape = MaterialTheme.shapes.medium)){
 
         Column(modifier= Modifier.padding(12.dp),
