@@ -1,5 +1,6 @@
 package com.mrkumar.studysmartapp.util
 
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.ui.graphics.Color
 import com.mrkumar.studysmartapp.presentation.theme.Green
 import com.mrkumar.studysmartapp.presentation.theme.Orange
@@ -32,4 +33,14 @@ fun Long.toHours():Float{
     val hours=this.toFloat()/3600f
     return "%.2f".format(hours).toFloat()
 
+}
+
+
+sealed class SnackBarEvent{
+    data class ShowSnackBar(
+        val message: String,
+        val duration: SnackbarDuration= SnackbarDuration.Short
+    ): SnackBarEvent()
+
+    data object NavigateUp: SnackBarEvent()
 }

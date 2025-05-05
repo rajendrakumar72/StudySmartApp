@@ -33,14 +33,18 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.mrkumar.studysmartapp.presentation.components.DeleteDialog
 import com.mrkumar.studysmartapp.presentation.components.SubjectListBottomSheet
 import com.mrkumar.studysmartapp.presentation.components.studySessionList
+import com.mrkumar.studysmartapp.presentation.subject.ServiceHelper
 import com.mrkumar.studysmartapp.sessionList
 import com.mrkumar.studysmartapp.subjectList
+import com.mrkumar.studysmartapp.util.Constants.ACTION_SERVICE_CANCEL
+import com.mrkumar.studysmartapp.util.Constants.ACTION_SERVICE_START
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
@@ -66,6 +70,8 @@ private fun SessionScreen(onBackButtonClick: () -> Unit) {
     var isBottomSheetOpen by remember { mutableStateOf(false) }
 
     var isDeleteDialogOpen by rememberSaveable { mutableStateOf(false) }
+
+    val context= LocalContext.current
 
 
     SubjectListBottomSheet(
@@ -119,8 +125,13 @@ private fun SessionScreen(onBackButtonClick: () -> Unit) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(12.dp),
-                    startButtonClick = {  },
-                    cancelButtonClick = {  },
+                    startButtonClick = {
+                        ServiceHelper.triggerForegroundService(context=context,
+                            action = ACTION_SERVICE_START) },
+
+                    cancelButtonClick = {
+                        ServiceHelper.triggerForegroundService(context=context,
+                        action = ACTION_SERVICE_CANCEL) },
                     finishButtonClick = {  }
                 )
             }

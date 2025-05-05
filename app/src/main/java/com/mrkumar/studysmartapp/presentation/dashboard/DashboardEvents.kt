@@ -8,7 +8,7 @@ sealed class DashboardEvents {
 
     data object SaveSubject: DashboardEvents()
 
-    data object DeleteSubject: DashboardEvents()
+    data object DeleteSession: DashboardEvents()
 
     data class OnDeleteSessionButtonClick(val session: Session): DashboardEvents()
 
