@@ -3,17 +3,19 @@ package com.mrkumar.studysmartapp.di
 import android.app.NotificationManager
 import android.content.Context
 import androidx.core.app.NotificationCompat
-import androidx.core.app.ServiceCompat
 import com.mrkumar.studysmartapp.R
+import com.mrkumar.studysmartapp.presentation.session.ServiceHelper
 import com.mrkumar.studysmartapp.util.Constants.NOTIFICATION_CHANNEL_ID
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ServiceScoped
+import dagger.hilt.android.components.ServiceComponent
+
 
 @Module
-@InstallIn(ServiceCompat::class)
+@InstallIn(ServiceComponent::class)
 object NotificationModule {
 
 
@@ -25,6 +27,7 @@ object NotificationModule {
             .setContentText("00:00:00")
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setOngoing(true)
+            .setContentIntent(ServiceHelper.clickPendingIntent(context))
     }
     @ServiceScoped
     @Provides

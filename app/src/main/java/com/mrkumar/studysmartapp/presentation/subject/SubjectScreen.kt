@@ -46,17 +46,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.mrkumar.studysmartapp.domain.model.Subject
 import com.mrkumar.studysmartapp.presentation.components.AddSubjectDialog
 import com.mrkumar.studysmartapp.presentation.components.CountCard
 import com.mrkumar.studysmartapp.presentation.components.DeleteDialog
 import com.mrkumar.studysmartapp.presentation.components.studySessionList
 import com.mrkumar.studysmartapp.presentation.components.taskList
 import com.mrkumar.studysmartapp.presentation.destinations.TaskScreenRouteDestination
-import com.mrkumar.studysmartapp.presentation.destinations.TaskScreenRouteDestination.invoke
 import com.mrkumar.studysmartapp.presentation.task.TaskScreenNavArgs
-import com.mrkumar.studysmartapp.sessionList
-import com.mrkumar.studysmartapp.tasks
 import com.mrkumar.studysmartapp.util.SnackBarEvent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.mrkumar.studysmartapp.domain.model.Subject
-import com.mrkumar.studysmartapp.subjectList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

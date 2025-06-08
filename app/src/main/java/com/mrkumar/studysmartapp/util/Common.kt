@@ -35,6 +35,10 @@ fun Long.toHours():Float{
 
 }
 
+fun Int.pad(): String{
+ return this.toString().padStart(length = 2, padChar = '0')
+}
+
 
 sealed class SnackBarEvent{
     data class ShowSnackBar(
